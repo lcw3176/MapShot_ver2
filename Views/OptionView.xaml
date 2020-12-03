@@ -1,0 +1,510 @@
+﻿<UserControl x:Class="MapShot_ver2.Views.OptionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MapShot_ver2.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" 
+             d:DesignWidth="800"
+             Background="Transparent">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Text="중심점 주소"
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="15"/>
+
+        <TextBox Grid.Row="0"
+                 Grid.Column="1"
+                 Width="400"
+                 Margin="20, 0, 0, 0"
+                 Height="20"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 Text="{Binding AddressText}"/>
+
+        <StackPanel Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button HorizontalAlignment="Right"
+                    Content="설정 저장"
+                    Margin="10"
+                    Padding="5"
+                    Command="{Binding saveSetCommand}"/>
+
+            <Button HorizontalAlignment="Right"
+                    Content="설정 불러오기"
+                    Margin="10"
+                    Padding="5"
+                    Command="{Binding loadSetCommand}"/>
+
+        </StackPanel>
+
+        <TextBlock Grid.Row="1"
+                   Grid.Column="0"
+                   Text="화질"
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="15"/>
+
+        <ComboBox Grid.Row="1"
+                  Grid.Column="1"
+                  SelectedIndex="{Binding QualityIndex}"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Left"
+                  Width="100"
+                  Margin="20, 0, 0, 0">
+
+            <ComboBoxItem Content="1.일반화질"/>
+            <ComboBoxItem Content="2.고화질"/>
+        </ComboBox>
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   Text="범위"
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="15"/>
+
+        <ComboBox Grid.Row="2"
+                  Grid.Column="1"
+                  SelectedIndex="{Binding ZoomLevelIndex}"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Left"
+                  Width="100"
+                  Margin="20, 0, 0, 0">
+
+            <ComboBoxItem Content="1"/>
+            <ComboBoxItem Content="2"/>
+            <ComboBoxItem Content="3"/>
+            <ComboBoxItem Content="4"/>
+            <ComboBoxItem Content="5"/>
+            <ComboBoxItem Content="6"/>
+            <ComboBoxItem Content="7"/>
+            <ComboBoxItem Content="8"/>
+            <ComboBoxItem Content="9"/>
+            <ComboBoxItem Content="10"/>
+        </ComboBox>
+
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="0"
+                   Text="지도타입"
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="15"/>
+
+        <ComboBox SelectedIndex="{Binding MapTypeIndex}"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Left"
+                  Width="200"
+                  Margin="20, 0, 0, 0"
+                  Grid.Row="3"
+                  Grid.Column="1">
+
+            <ComboBoxItem Content="1.흰배경"/>
+            <ComboBoxItem Content="2.기본지도"/>
+            <ComboBoxItem Content="3.회색지도"/>
+            <ComboBoxItem Content="4.야간지도"/>
+            <ComboBoxItem Content="5.위성지도"/>
+            <ComboBoxItem Content="6.위성시설물지도"/>
+
+        </ComboBox>
+
+        <TextBlock Grid.Row="4"
+                   Grid.Column="0"
+                   Text="세부설정"
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="15"/>
+
+        <Grid Grid.Row="4"
+              Grid.Column="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="190"/>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Column="0"
+                        Grid.Row="0">
+                <TextBlock Text="경계"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+                <ItemsControl ItemsSource="{Binding boundary, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="광역시도"
+                          Command="{Binding checkCommand}"
+                          CommandParameter="1"/>
+                <CheckBox Content="시군구"
+                          Command="{Binding checkCommand}"
+                          CommandParameter="2"/>
+                <CheckBox Content="읍면동"
+                          Command="{Binding checkCommand}"
+                Command="{Binding checkCommand}"
+                                      CommandParameter="{Binding Title}"
+                          CommandParameter="3"/>-->
+
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Column="1"
+                        Grid.Row="0">
+                    <TextBlock Text="교통"
+                               FontSize="13"
+                               Margin="0, 0, 0, 10"/>
+
+                <ItemsControl ItemsSource="{Binding traffic, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="교통노드   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="4"/>
+                <CheckBox Content="교통링크   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="5"/>-->
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Column="2"
+                        Grid.Row="0">
+                <TextBlock Text="도시계획"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+
+                <ItemsControl ItemsSource="{Binding city, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="도시계획(공간시설)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="6"/>
+                <CheckBox Content="도시계획(공공문화체육시설)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="7"/>
+                <CheckBox Content="도시계획(교통시설)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="8"/>
+                <CheckBox Content="도시계획(기타기반시설)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="9"/>
+                <CheckBox Content="도시계획(도로)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="10"/>
+                <CheckBox Content="도시계획(방재시설)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="11"/>
+                <CheckBox Content="도시계획(유통공급시설)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="12"/>
+                <CheckBox Content="지구단위계획   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="13"/>
+                <CheckBox Content="토지이용계획도   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="14"/>-->
+            </StackPanel>
+
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Column="3"
+                        Grid.Row="0">
+                <TextBlock Text="산업단지"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+                <ItemsControl ItemsSource="{Binding industry, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="단지경계   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="15"/>
+                <CheckBox Content="단지시설용지   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="16"/>-->
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Column="4"
+                        Grid.Row="0">
+                <TextBlock Text="수자원"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+
+                <ItemsControl ItemsSource="{Binding water, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="대권역   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="17"/>
+                <CheckBox Content="중권역   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="18"/>
+                <CheckBox Content="표준권역   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="19"/>
+                <CheckBox Content="하천망   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="20"/>-->
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Column="0"
+                        Grid.Row="1">
+                <TextBlock Text="용도지역지구"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+
+                <ItemsControl ItemsSource="{Binding usage, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="취락지구   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="21"/>-->
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Column="1"
+                        Grid.Row="1">
+                <TextBlock Text="임업,산촌"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+
+                <ItemsControl ItemsSource="{Binding mountain, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="산림입지도   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="22"/>
+                <CheckBox Content="산지(보안림)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="23"/>
+                <CheckBox Content="산지(자연휴양림)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="24"/>
+                <CheckBox Content="산지(채종림)   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="25"/>-->
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Row="1"
+                        Grid.Column="2">
+                <TextBlock Text="토지"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+                <ItemsControl ItemsSource="{Binding earth, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="사업지구경계도   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="26"/>
+                <CheckBox Content="지적도   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="27"/>-->
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Row="1"
+                        Grid.Column="3">
+                <TextBlock Text="항공공항"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+
+                <ItemsControl ItemsSource="{Binding airport, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="비행금지구역   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="28"/>
+                <CheckBox Content="비행장교통구역   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="29"/>
+                <CheckBox Content="비행정보구역   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="30"/>-->
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical"
+                        Margin="5"
+                        Grid.Row="1"
+                        Grid.Column="4">
+                <TextBlock Text="해양수산어촌"
+                           FontSize="13"
+                           Margin="0, 0, 0, 10"/>
+
+                <ItemsControl ItemsSource="{Binding fish, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Title}"
+                                      IsChecked="{Binding Check}"
+                                      Margin="0, 0, 10, 0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<CheckBox Content="국가산업단지   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="31"/>
+                <CheckBox Content="농공단지   "
+                          Command="{Binding checkCommand}"
+                          CommandParameter="32"/>-->
+            </StackPanel>
+
+        </Grid>
+
+        <TextBlock Grid.Row="5"
+                   Grid.Column="0"
+                   Text="저장 위치"
+                   TextAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="15"/>
+
+
+        <TextBox Grid.Row="5"
+                 Grid.Column="1"
+                 Width="400"
+                 Margin="20, 0, 0, 0"
+                 Height="20"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"
+                 IsReadOnly="True"
+                 Text="{Binding SavePath}"/>
+
+        <StackPanel Grid.Row="5"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button HorizontalAlignment="Right"
+                    Content="경로 지정"
+                    Margin="10"
+                    Padding="5"
+                    Command="{Binding setSavePathCommand}"/>
+        </StackPanel>
+
+
+        <StackPanel Grid.Row="6"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+            <ProgressBar Minimum="0"
+                     Width="650"
+                     Maximum="{Binding PictureCount}"
+                     Value="{Binding ProgressValue}"
+                     Margin="10"
+                     Grid.Row="6"
+                     HorizontalAlignment="Left"
+                     Grid.Column="1"/>
+            <TextBlock Text="{Binding ProgressValue}"
+                       VerticalAlignment="Center"/>
+            <TextBlock Text="/"
+                       VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding PictureCount}"
+                       VerticalAlignment="Center"/>
+            
+        </StackPanel>
+        
+
+
+
+        <Button HorizontalAlignment="Center"
+                Content="시작"
+                Margin="10"
+                Padding="5"
+                Width="80"
+                FontSize="15"
+                Command="{Binding startCommand}"
+                Grid.Row="6"
+                Grid.Column="0"/>
+        
+
+    </Grid>
+</UserControl>
