@@ -8,10 +8,10 @@ namespace MapShot_ver2.Service
 {
     class ConfigService
     {
+        private OptionDAO optionDao = new OptionDAO();
 
         public Option Load()
         {
-
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             KeyValueConfigurationCollection configCollection = config.AppSettings.Settings;
             
@@ -32,7 +32,7 @@ namespace MapShot_ver2.Service
 
                 for (int i = 0; i < details.Length; i++)
                 {
-                    foreach (var j in OptionDAO.GetInstance().detailOptions)
+                    foreach (var j in optionDao.SelectAllDetailOptions())
                     {
                         if (j.Title == details[i])
                         {
@@ -51,18 +51,18 @@ namespace MapShot_ver2.Service
             return option;
         }
 
-        public void Save()
+        public void Save(Option option)
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             KeyValueConfigurationCollection configCollection = config.AppSettings.Settings;
             configCollection.Clear();
 
-            configCollection.Add("quality", OptionDAO.GetInstance().qualityIndex.ToString());
-            configCollection.Add("zoomLevel", OptionDAO.GetInstance().zoomLevelIndex.ToString());
-            configCollection.Add("mapType", OptionDAO.GetInstance().mapTypeIndex.ToString());
+            configCollection.Add("quality", option.qualityIndex.ToString());
+            configCollection.Add("zoomLevel", option.zoomLevelIndex.ToString());
+            configCollection.Add("mapType", option.mapTypeIndex.ToString());
 
-            foreach (var i in OptionDAO.GetInstance().detailOptions)
+            foreach (var i in option.detailOptions)
             {
                 if (i.Check)
                 {

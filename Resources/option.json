@@ -1,0 +1,64 @@
+{
+  "boundary": {
+    "key": "boundary",
+    "광역시도": "lt_c_adsido",
+    "시군구": "lt_c_adsigg",
+    "읍면동": "lt_c_ademd"
+  },
+  "airport": {
+    "key": "airport",
+    "비행금지구역": "lt_c_aisprhc",
+    "비행장교통구역": "lt_c_aisatzc",
+    "비행정보구역": "lt_c_aisfirc"
+  },
+  "city": {
+    "key": "city",
+    "도시계획(공간시설)": "lt_c_upisuq153",
+    "도시계획(공공문화체육시설)": "lt_c_upisuq155",
+    "도시계획(교통시설)": "lt_c_upisuq152",
+    "도시계획(기타기반시설)": "lt_c_upisuq159",
+    "도시계획(도로)": "lt_c_upisuq151",
+    "도시계획(방재시설)": "lt_c_upisuq156",
+    "도시계획(유통공급시설)": "lt_c_upisuq154",
+    "지구단위계획": "lt_c_upisuq161",
+    "토지이용계획도": "lt_c_lhblpn"
+  },
+  "earth": {
+    "key": "earth",
+    "사업지구경계도": "lt_c_lhzone",
+    "지적도": "lp_pa_cbnd_bubun"
+  },
+  "fish": {
+    "key": "fish",
+    "국가산업단지": "lt_c_wgisiegug",
+    "농공단지": "lt_c_wgisienong"
+  },
+  "industry": {
+    "key": "industry",
+    "단지경계": "lt_c_damdan",
+    "단지시설용지": "lt_c_damyoj"
+  },
+  "mountain": {
+    "key": "mountain",
+    "산림입지도": "lt_c_fsdifrsts",
+    "산지(보안림)": "lt_c_flisfk300",
+    "산지(자연휴양림)": "lt_c_flisfk100",
+    "산지(채종림)": " lt_c_flisfk200"
+  },
+  "traffic": {
+    "key": "traffic",
+    "교통노드": "lt_p_moctnode",
+    "교통링크": "lt_l_moctlink"
+  },
+  "usage": {
+    "key": "usage",
+    "취락지구": "lt_c_uq128"
+  },
+  "water": {
+    "key": "water",
+    "대권역": "lt_c_wkmbbsn",
+    "중권역": "lt_c_wkmmbsn",
+    "표준권역": "lt_c_wkmsbsn",
+    "하천망": "lt_c_wkmstrm"
+  }
+}

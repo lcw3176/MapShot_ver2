@@ -1,16 +1,20 @@
 ﻿using MapShot_ver2.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace MapShot_ver2.DAO
 {
     class OptionDAO
     {
-        private Option option = new Option();
+
+        private const string path = "Resources/option.json";
         private static OptionDAO Instance;
 
         public static OptionDAO GetInstance()
         {
-            if(Instance == null)
+            if (Instance == null)
             {
                 Instance = new OptionDAO();
             }
@@ -18,46 +22,61 @@ namespace MapShot_ver2.DAO
             return Instance;
         }
 
-
-        //public int quality 
-        //{
-        //    get { return option.quality; }
-        //    set { option.quality = value; } 
-        //}
-
-        public int qualityIndex
+        public JObject SelectAll()
         {
-            get { return option.qualityIndex; }
-            set { option.qualityIndex = value; }
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
+            using (StreamReader value = File.OpenText(path))
+            using (JsonTextReader reader = new JsonTextReader(value))
+            {
+                JObject json = (JObject)JToken.ReadFrom(reader);
+
+                return json;
+            }
         }
 
-        //public int zoomLevel
-        //{
-        //    get { return option.zoomLevel; }
-        //    set { option.zoomLevel = value; }
-        //}
-
-        public int zoomLevelIndex
+        public ObservableCollection<DetailOption> SelectAllDetailOptions()
         {
-            get { return option.zoomLevelIndex; }
-            set { option.zoomLevelIndex = value; }
-        }
+            if (!File.Exists(path))
+            {
+                return null;
+            }
 
-        //public MapTypeEnum mapType
-        //{
-        //    get { return option.mapType; }
-        //    set { option.mapType = value; }
-        //}
-        public int mapTypeIndex
-        {
-            get { return option.mapTypeIndex; }
-            set { option.mapTypeIndex = value; }
-        }
+            using (StreamReader value = File.OpenText(path))
+            using (JsonTextReader reader = new JsonTextReader(value))
+            {
+                JObject json = (JObject)JToken.ReadFrom(reader);
+                ObservableCollection<DetailOption> temp = new ObservableCollection<DetailOption>();
 
-        public ObservableCollection<DetailOption> detailOptions
-        {
-            get { return option.detailOptions; }
-            set { option.detailOptions = value; }
+                OptionKeyData key = new OptionKeyData();
+                foreach (string i in key.Keys)
+                {
+                    string parentCollectionName = string.Empty;
+                    
+
+                    foreach (var j in JObject.Parse(json[i].ToString()))
+                    {
+                        if (j.Key == "key")
+                        {
+                            parentCollectionName = j.Value.ToString();
+                            continue;
+                        }
+
+                        temp.Add(new DetailOption()
+                        {
+                            Check = false,
+                            Title = j.Key,
+                            code = j.Value.ToString(),
+                            collectionName = parentCollectionName,
+                        });
+                    }
+                }
+
+                return temp;
+            }
         }
     }
 }

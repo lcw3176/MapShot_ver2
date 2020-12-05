@@ -20,24 +20,25 @@ namespace MapShot_ver2.ViewModels
         private int progressValue = 0;
         ConfigService configService = new ConfigService();
         OptionService optionService = new OptionService();
-        JsonService jsonService = new JsonService();
+
+        private Option option = new Option();
 
         public int ZoomLevelIndex
         {
-            get { return OptionDAO.GetInstance().zoomLevelIndex; }
+            get { return option.zoomLevelIndex; }
             set
             {
-                OptionDAO.GetInstance().zoomLevelIndex = value;
+                option.zoomLevelIndex = value;
                 OnPropertyChanged("ZoomLevelIndex");
             }
         }
 
         public int MapTypeIndex
         {
-            get { return OptionDAO.GetInstance().mapTypeIndex; }
+            get { return option.mapTypeIndex; }
             set
             {
-                OptionDAO.GetInstance().mapTypeIndex = value;
+                option.mapTypeIndex = value;
                 OnPropertyChanged("MapTypeIndex");
             }
         }
@@ -45,10 +46,10 @@ namespace MapShot_ver2.ViewModels
 
         public int QualityIndex
         {
-            get { return OptionDAO.GetInstance().qualityIndex; }
+            get { return option.qualityIndex; }
             set
             {
-                OptionDAO.GetInstance().qualityIndex = value;
+                option.qualityIndex = value;
                 OnPropertyChanged("QualityIndex");
             }
         }
@@ -92,107 +93,7 @@ namespace MapShot_ver2.ViewModels
             }
         }
 
-        public ObservableCollection<DetailOption> boundary 
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["boundary"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["boundary"] = value;
-                OnPropertyChanged("boundary");
-            }
-        }
-
-        public ObservableCollection<DetailOption> traffic
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["traffic"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["traffic"] = value;
-                OnPropertyChanged("traffic");
-            }
-        }
-
-        public ObservableCollection<DetailOption> airport
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["airport"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["airport"] = value;
-                OnPropertyChanged("airport");
-            }
-        }
-
-        public ObservableCollection<DetailOption> city
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["city"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["city"] = value;
-                OnPropertyChanged("city");
-            }
-        }
-
-        public ObservableCollection<DetailOption> earth
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["earth"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["earth"] = value;
-                OnPropertyChanged("earth");
-            }
-        }
-
-        public ObservableCollection<DetailOption> fish
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["fish"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["fish"] = value;
-                OnPropertyChanged("fish");
-            }
-        }
-
-        public ObservableCollection<DetailOption> industry
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["industry"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["industry"] = value;
-                OnPropertyChanged("industry");
-            }
-        }
-
-        public ObservableCollection<DetailOption> mountain
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["mountain"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["mountain"] = value;
-                OnPropertyChanged("mountain");
-            }
-        }
-
-        public ObservableCollection<DetailOption> usage
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["usage"]; }
-            set
-            {
-                JsonDAO.GetInstance().jsonDictionary["usage"]= value;
-                OnPropertyChanged("usage");
-            }
-        }
-
-        public ObservableCollection<DetailOption> water
-        {
-            get { return JsonDAO.GetInstance().jsonDictionary["water"]; }
-            set
-            {
-               JsonDAO.GetInstance().jsonDictionary["water"] = value;
-                OnPropertyChanged("water");
-            }
-        }
-
-
+        public Dictionary<string, ObservableCollection<DetailOption>> optionDict { get; set; }
 
         public ICommand saveSetCommand { get; private set; }
         public ICommand loadSetCommand { get; private set; }
@@ -216,21 +117,26 @@ namespace MapShot_ver2.ViewModels
         /// </summary>
         public void InitCollections()
         {
-            jsonService.SetCollections();
-            var dic = JsonDAO.GetInstance().jsonDictionary;
-
-            boundary = dic["boundary"];
-            traffic = dic["traffic"];
-            airport = dic["airport"];
-            city = dic["city"];
-            earth = dic["earth"];
-            fish = dic["fish"];
-            industry = dic["industry"];
-            mountain = dic["mountain"];
-            usage = dic["usage"];
-            water = dic["water"];
+            optionDict = optionService.GetOptionDict();
         }
 
+        private ObservableCollection<DetailOption> GetCheckedOption()
+        {
+            ObservableCollection<DetailOption> temp = new ObservableCollection<DetailOption>();
+
+            foreach(var i in optionDict.Values)
+            {
+                foreach(var j in i)
+                {
+                    if(j.Check)
+                    {
+                        temp.Add(j);
+                    }
+                }
+            }
+
+            return temp;
+        }
 
         /// <summary>
         /// 캡쳐 시작 버튼
@@ -243,8 +149,9 @@ namespace MapShot_ver2.ViewModels
                 MessageBox.Show("현재 작업중입니다.", "알림", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            option.detailOptions = GetCheckedOption();
 
-            if (!optionService.isValidate())
+            if (!optionService.isValidate(option))
             {
                 MessageBox.Show("세부설정은 최대 4개까지 설정 가능합니다.", "알림", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -259,11 +166,11 @@ namespace MapShot_ver2.ViewModels
             KakaoService kakaoService = new KakaoService();
             List<string> locale = kakaoService.Search(AddressText);
 
-            CaptureService captureService = new CaptureService();
+            CaptureService captureService = new CaptureService(option);
             captureService.add += () => { ProgressValue += 1; };
 
             ProgressValue = 0;
-            PictureCount = (int)Math.Pow((OptionDAO.GetInstance().zoomLevelIndex + 1) * 2 + 1, 2);
+            PictureCount = (int)Math.Pow((option.zoomLevelIndex + 1) * 2 + 1, 2);
             isBusy = true;
 
             Task.Run(() => 
@@ -296,6 +203,7 @@ namespace MapShot_ver2.ViewModels
         private void loadSetMethod(object obj)
         {
             Option option = configService.Load();
+
             if (option == null)
             {
                 MessageBox.Show("설정 파일이 존재하지 않습니다", "알림", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -313,7 +221,8 @@ namespace MapShot_ver2.ViewModels
         /// <param name="obj"></param>
         private void saveSetMethod(object obj)
         {
-            configService.Save();
+            option.detailOptions = GetCheckedOption();
+            configService.Save(option);
         }
     }
 }

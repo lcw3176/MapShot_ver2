@@ -21,6 +21,12 @@ namespace MapShot_ver2.Service
         private const int height = 942;
         private decimal lngFlag = 0.011m;
         private decimal latFlag = 0.008m;
+        private Option option;
+
+        public CaptureService(Option option)
+        {
+            this.option = option;
+        }
 
         public void StartCapture(List<string> locale, string path)
         {
@@ -31,12 +37,12 @@ namespace MapShot_ver2.Service
                 decimal firstLng = decimal.Parse(locale[1].Substring(0, 8));
                 decimal firstLat = decimal.Parse(locale[2].Substring(0, 7));
 
-                int blockNum = (int)Math.Pow((OptionDAO.GetInstance().zoomLevelIndex  + 1) * 2 + 1, 2);
+                int blockNum = (int)Math.Pow((option.zoomLevelIndex  + 1) * 2 + 1, 2);
                 int rotation = (int)Math.Sqrt(blockNum);
                 decimal moveTopCoor = rotation / 2;
 
                 string saveDirectory = Path.Combine(path, place);
-                string zoom = (OptionDAO.GetInstance().qualityIndex + 17).ToString();
+                string zoom = (option.qualityIndex + 17).ToString();
 
                 if (zoom == "18") { lngFlag /= 2; latFlag /= 2; saveDirectory += "[고화질]"; }
 
@@ -90,19 +96,19 @@ namespace MapShot_ver2.Service
         {
             string url = "http://api.vworld.kr/req/image?service=image&request=getmap"; // &key=인증키&[요청파라미터]
             string key = "개발자 키";
-            string baseMap = Enum.Parse(typeof(MapTypeEnum), OptionDAO.GetInstance().mapTypeIndex.ToString()).ToString();
+            string baseMap = Enum.Parse(typeof(MapTypeEnum), option.mapTypeIndex.ToString()).ToString();
             string center = coor.lng + "," + coor.lat;
             string crs = "epsg:4326";
             string size = "1024,1024";
             string form = "jpeg";
-            string zoom = (OptionDAO.GetInstance().qualityIndex + 17).ToString();
+            string zoom = (option.qualityIndex + 17).ToString();
             string query;
 
             query = string.Format("&key={0}&basemap={1}&center={2}&crs={3}&zoom={4}&size={5}&format={6}", key, baseMap, center, crs, zoom, size, form);
             StringBuilder sb = new StringBuilder();
             int count = 0;
 
-            foreach (var i in OptionDAO.GetInstance().detailOptions)
+            foreach (var i in option.detailOptions)
             {
                 if (i.Check)
                 {
@@ -113,7 +119,7 @@ namespace MapShot_ver2.Service
 
             if (count > 0)
             {
-                foreach (var i in OptionDAO.GetInstance().detailOptions)
+                foreach (var i in option.detailOptions)
                 {
                     if (i.Check)
                     {

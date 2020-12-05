@@ -159,7 +159,7 @@
                 <TextBlock Text="경계"
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
-                <ItemsControl ItemsSource="{Binding boundary, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[boundary], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -168,17 +168,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="광역시도"
-                          Command="{Binding checkCommand}"
-                          CommandParameter="1"/>
-                <CheckBox Content="시군구"
-                          Command="{Binding checkCommand}"
-                          CommandParameter="2"/>
-                <CheckBox Content="읍면동"
-                          Command="{Binding checkCommand}"
-                Command="{Binding checkCommand}"
-                                      CommandParameter="{Binding Title}"
-                          CommandParameter="3"/>-->
 
             </StackPanel>
 
@@ -190,7 +179,7 @@
                                FontSize="13"
                                Margin="0, 0, 0, 10"/>
 
-                <ItemsControl ItemsSource="{Binding traffic, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[traffic], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -199,12 +188,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="교통노드   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="4"/>
-                <CheckBox Content="교통링크   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="5"/>-->
             </StackPanel>
 
             <StackPanel Orientation="Vertical"
@@ -215,7 +198,7 @@
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
 
-                <ItemsControl ItemsSource="{Binding city, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[city], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -224,33 +207,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="도시계획(공간시설)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="6"/>
-                <CheckBox Content="도시계획(공공문화체육시설)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="7"/>
-                <CheckBox Content="도시계획(교통시설)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="8"/>
-                <CheckBox Content="도시계획(기타기반시설)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="9"/>
-                <CheckBox Content="도시계획(도로)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="10"/>
-                <CheckBox Content="도시계획(방재시설)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="11"/>
-                <CheckBox Content="도시계획(유통공급시설)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="12"/>
-                <CheckBox Content="지구단위계획   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="13"/>
-                <CheckBox Content="토지이용계획도   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="14"/>-->
             </StackPanel>
 
 
@@ -261,7 +217,7 @@
                 <TextBlock Text="산업단지"
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
-                <ItemsControl ItemsSource="{Binding industry, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[industry], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -270,12 +226,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="단지경계   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="15"/>
-                <CheckBox Content="단지시설용지   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="16"/>-->
             </StackPanel>
 
             <StackPanel Orientation="Vertical"
@@ -286,7 +236,7 @@
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
 
-                <ItemsControl ItemsSource="{Binding water, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[water], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -295,18 +245,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="대권역   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="17"/>
-                <CheckBox Content="중권역   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="18"/>
-                <CheckBox Content="표준권역   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="19"/>
-                <CheckBox Content="하천망   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="20"/>-->
             </StackPanel>
 
             <StackPanel Orientation="Vertical"
@@ -317,7 +255,7 @@
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
 
-                <ItemsControl ItemsSource="{Binding usage, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[usage], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -326,9 +264,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="취락지구   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="21"/>-->
             </StackPanel>
 
             <StackPanel Orientation="Vertical"
@@ -339,7 +274,7 @@
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
 
-                <ItemsControl ItemsSource="{Binding mountain, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[mountain], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -348,18 +283,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="산림입지도   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="22"/>
-                <CheckBox Content="산지(보안림)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="23"/>
-                <CheckBox Content="산지(자연휴양림)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="24"/>
-                <CheckBox Content="산지(채종림)   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="25"/>-->
             </StackPanel>
 
             <StackPanel Orientation="Vertical"
@@ -369,7 +292,7 @@
                 <TextBlock Text="토지"
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
-                <ItemsControl ItemsSource="{Binding earth, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[earth], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -378,12 +301,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="사업지구경계도   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="26"/>
-                <CheckBox Content="지적도   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="27"/>-->
             </StackPanel>
 
             <StackPanel Orientation="Vertical"
@@ -394,7 +311,7 @@
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
 
-                <ItemsControl ItemsSource="{Binding airport, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[airport], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -403,15 +320,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="비행금지구역   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="28"/>
-                <CheckBox Content="비행장교통구역   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="29"/>
-                <CheckBox Content="비행정보구역   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="30"/>-->
             </StackPanel>
 
             <StackPanel Orientation="Vertical"
@@ -422,7 +330,7 @@
                            FontSize="13"
                            Margin="0, 0, 0, 10"/>
 
-                <ItemsControl ItemsSource="{Binding fish, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding optionDict[fish], UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox Content="{Binding Title}"
@@ -431,12 +339,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<CheckBox Content="국가산업단지   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="31"/>
-                <CheckBox Content="농공단지   "
-                          Command="{Binding checkCommand}"
-                          CommandParameter="32"/>-->
             </StackPanel>
 
         </Grid>

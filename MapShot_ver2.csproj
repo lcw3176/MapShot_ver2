@@ -71,16 +71,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="DAO\JsonDAO.cs" />
     <Compile Include="DAO\OptionDAO.cs" />
     <Compile Include="Models\Coor.cs" />
     <Compile Include="Models\DetailOption.cs" />
-    <Compile Include="Models\JsonKeyData.cs" />
+    <Compile Include="Models\OptionKeyData.cs" />
     <Compile Include="Models\MapTypeEnum.cs" />
     <Compile Include="Models\Option.cs" />
     <Compile Include="Service\CaptureService.cs" />
     <Compile Include="Service\ConfigService.cs" />
-    <Compile Include="Service\JsonService.cs" />
     <Compile Include="Service\KakaoService.cs" />
     <Compile Include="Service\OptionService.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
@@ -137,6 +135,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Resources\option.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

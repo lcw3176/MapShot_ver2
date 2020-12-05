@@ -17,8 +17,8 @@ namespace MapShot_ver2.Models
                 OnPropertyChanged("Check");
             }
         }
-        public string code { get; set; }
 
+        public string code { get; set; }
         public string collectionName { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
