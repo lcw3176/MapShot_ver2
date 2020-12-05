@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using MapShot_ver2.Models;
-using MapShot_ver2.DAO;
 
 namespace MapShot_ver2.ViewModels
 {
@@ -16,12 +15,23 @@ namespace MapShot_ver2.ViewModels
     {
         private string addressText = string.Empty;
         private string savePath = string.Empty;
+        private string stateText = "대기중";
         private int pictureCount = 1;
         private int progressValue = 0;
         ConfigService configService = new ConfigService();
         OptionService optionService = new OptionService();
 
         private Option option = new Option();
+
+        public string StateText
+        {
+            get { return stateText; }
+            set
+            {
+                stateText = value;
+                OnPropertyChanged("StateText");
+            }
+        }
 
         public int ZoomLevelIndex
         {
@@ -167,17 +177,46 @@ namespace MapShot_ver2.ViewModels
             List<string> locale = kakaoService.Search(AddressText);
 
             CaptureService captureService = new CaptureService(option);
-            captureService.add += () => { ProgressValue += 1; };
+            captureService.count += CountEvent;
+            captureService.complete += CompleteEvent;
 
             ProgressValue = 0;
             PictureCount = (int)Math.Pow((option.zoomLevelIndex + 1) * 2 + 1, 2);
             isBusy = true;
+            StateText = "사진 수집중";
 
             Task.Run(() => 
             {
                 captureService.StartCapture(locale, SavePath);
                 isBusy = false;
             });
+
+            
+        }
+
+        /// <summary>
+        /// 사진 캡쳐, 병합 과정이 모두 끝났을 시 발생 이벤트
+        /// </summary>
+        private void CompleteEvent()
+        {
+            StateText = "대기중";
+            ProgressValue = 0;
+            PictureCount = 1;
+            MessageBox.Show("작업이 완료되었습니다", "알림", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        /// <summary>
+        /// 사진저장 혹은 사진병합 작업 하나하나 끝날때마다 이벤트 발생, ProgressVar Value를 더해준다
+        /// </summary>
+        private void CountEvent()
+        {
+            ProgressValue += 1;
+            
+            if(ProgressValue >= pictureCount)
+            {
+                ProgressValue = 0;
+                StateText = "사진 병합중";
+            }
         }
 
         /// <summary>

@@ -378,7 +378,7 @@
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
             <ProgressBar Minimum="0"
-                     Width="650"
+                     Width="630"
                      Maximum="{Binding PictureCount}"
                      Value="{Binding ProgressValue}"
                      Margin="10"
@@ -391,7 +391,10 @@
                        VerticalAlignment="Center"/>
             <TextBlock Text="{Binding PictureCount}"
                        VerticalAlignment="Center"/>
-            
+            <TextBlock Text="{Binding StateText}"
+                       VerticalAlignment="Center"
+                       Margin="10, 0, 0, 0"/>
+
         </StackPanel>
         
 

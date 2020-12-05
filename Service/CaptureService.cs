@@ -14,13 +14,15 @@ namespace MapShot_ver2.Service
 {
     class CaptureService
     {
-        public delegate void AddProgress();
-        public event AddProgress add;
+        public delegate void CompleteEvent();
+        public event CompleteEvent count;
+        public event CompleteEvent complete;
+
         private Dictionary<int, string> fileName = new Dictionary<int, string>();
         private const int width = 1024;
         private const int height = 942;
-        private decimal lngFlag = 0.011m;
-        private decimal latFlag = 0.008m;
+        private decimal lngMoveToRight = 0.011m;
+        private decimal latMoveToBottom = 0.008m;
         private Option option;
 
         public CaptureService(Option option)
@@ -28,6 +30,11 @@ namespace MapShot_ver2.Service
             this.option = option;
         }
 
+        /// <summary>
+        /// 캡쳐 시작
+        /// </summary>
+        /// <param name="locale">위경도, 장소</param>
+        /// <param name="path">사용자 지정 저장 경로</param>
         public void StartCapture(List<string> locale, string path)
         {
 
@@ -39,15 +46,14 @@ namespace MapShot_ver2.Service
 
                 int blockNum = (int)Math.Pow((option.zoomLevelIndex  + 1) * 2 + 1, 2);
                 int rotation = (int)Math.Sqrt(blockNum);
-                decimal moveTopCoor = rotation / 2;
 
                 string saveDirectory = Path.Combine(path, place);
                 string zoom = (option.qualityIndex + 17).ToString();
 
-                if (zoom == "18") { lngFlag /= 2; latFlag /= 2; saveDirectory += "[고화질]"; }
+                if (zoom == "18") { lngMoveToRight /= 2; latMoveToBottom /= 2; saveDirectory += "[고화질]"; }
 
-                firstLng -= lngFlag * moveTopCoor;
-                firstLat += latFlag * moveTopCoor;
+                firstLng -= lngMoveToRight * (rotation / 2);
+                firstLat += latMoveToBottom * (rotation / 2);
                 DirectoryInfo di = new DirectoryInfo(saveDirectory);
 
                 if (!di.Exists) { di.Create(); }
@@ -57,7 +63,7 @@ namespace MapShot_ver2.Service
 
                 MakeOneShot(blockNum, saveDirectory, place);
 
-                MessageBox.Show("작업이 완료되었습니다", "알림", MessageBoxButton.OK, MessageBoxImage.Information);
+                complete();
             }
 
             catch (Exception ex)
@@ -66,6 +72,13 @@ namespace MapShot_ver2.Service
             }
         }
 
+        /// <summary>
+        /// 중심 좌표값을 이용해서 인근 구역 위경도값 가져오기
+        /// </summary>
+        /// <param name="rotation">반복 횟수(지도의 한 변의 사진갯수)</param>
+        /// <param name="lng">경도</param>
+        /// <param name="lat">위도</param>
+        /// <returns></returns>
         private List<Coor> GetCoors(int rotation, decimal lng, decimal lat)
         {
             List<Coor> coor = new List<Coor>();
@@ -81,19 +94,25 @@ namespace MapShot_ver2.Service
                         lng = lng,
                         lat = lat,
                     });
-                    lng += lngFlag;
+                    lng += lngMoveToRight;
                     index++;
                 }
 
-                lng -= (lngFlag * rotation);
-                lat -= latFlag;
+                lng -= (lngMoveToRight * rotation);
+                lat -= latMoveToBottom;
             }
 
             return coor;
         }
 
+        /// <summary>
+        /// V-World에 해당 이미지 요청
+        /// </summary>
+        /// <param name="coor">좌표 클래스</param>
+        /// <param name="saveDirectory">저장 디렉토리 위치</param>
+        /// <param name="place">캡쳐한 지역명(파일 저장명에 사용)</param>
         private void GetImageFromUrl(Coor coor, string saveDirectory, string place)
-        {
+        {   
             string url = "http://api.vworld.kr/req/image?service=image&request=getmap"; // &key=인증키&[요청파라미터]
             string key = "개발자 키";
             string baseMap = Enum.Parse(typeof(MapTypeEnum), option.mapTypeIndex.ToString()).ToString();
@@ -104,57 +123,52 @@ namespace MapShot_ver2.Service
             string zoom = (option.qualityIndex + 17).ToString();
             string query;
 
-            query = string.Format("&key={0}&basemap={1}&center={2}&crs={3}&zoom={4}&size={5}&format={6}", key, baseMap, center, crs, zoom, size, form);
+            query = string.Format("" +
+                "&key={0}" +
+                "&basemap={1}" +
+                "&center={2}" +
+                "&crs={3}" +
+                "&zoom={4}" +
+                "&size={5}" +
+                "&format={6}", key, baseMap, center, crs, zoom, size, form);
+
             StringBuilder sb = new StringBuilder();
-            int count = 0;
 
             foreach (var i in option.detailOptions)
             {
                 if (i.Check)
                 {
-                    count++;
-                    break;
+                    sb.Append(i.code);
+                    sb.Append(",");
                 }
+
             }
 
-            if (count > 0)
+            if(sb.Length >= 1)
             {
-                foreach (var i in option.detailOptions)
-                {
-                    if (i.Check)
-                    {
-                        sb.Append(i.code);
-                        sb.Append(",");
-                    }
-
-                }
-
                 sb.Remove(sb.Length - 1, 1);
-
-                query += string.Format("&layers={0}&styles={0}", sb.ToString());
-
+                query += string.Format("" +
+                    "&layers={0}" +
+                    "&styles={0}", sb.ToString());
             }
+            
 
             string requestUrl = string.Format("{0}{1}", url, query);
-
+            string savePath = string.Format(Path.Combine(saveDirectory, string.Format("{0}[{1}].jpg", place, coor.index.ToString())));
+            
             try
             {
                 WebRequest request = WebRequest.Create(requestUrl);
-                WebResponse response = request.GetResponse();
-                Stream data = response.GetResponseStream();
 
-
-                Bitmap bitmap = new Bitmap(data);
-                string savePath = string.Format(Path.Combine(saveDirectory, string.Format("{0}[{1}].jpg", place, coor.index.ToString())));
-                Bitmap clone = bitmap.Clone(new Rectangle(0, 0, width, height), PixelFormat.DontCare);
-                clone.Save(savePath, ImageFormat.Jpeg);
-                fileName.Add(coor.index, savePath);
-
-                add();
-                data.Dispose();
-                clone.Dispose();
-                bitmap.Dispose();
-                response.Dispose();
+                using (WebResponse response = request.GetResponse())
+                using(Stream data = response.GetResponseStream())
+                using (Bitmap bitmap = new Bitmap(data))
+                using(Bitmap clone = bitmap.Clone(new Rectangle(0, 0, width, height), PixelFormat.DontCare))
+                {
+                    clone.Save(savePath, ImageFormat.Jpeg);
+                    fileName.Add(coor.index, savePath);
+                    count();
+                }
             }
 
             catch (Exception ex)
@@ -163,7 +177,13 @@ namespace MapShot_ver2.Service
             }
         }
 
-        private void MakeOneShot(int blockNum, string path, string addressFileName)
+        /// <summary>
+        /// 여러개 사진 하나로 붙이기
+        /// </summary>
+        /// <param name="blockNum">총 사진 갯수</param>
+        /// <param name="path">저장 디렉토리 경로</param>
+        /// <param name="place">캡쳐한 지역명</param>
+        private void MakeOneShot(int blockNum, string path, string place)
         {
             int root = (int)Math.Sqrt(blockNum);
 
@@ -175,9 +195,10 @@ namespace MapShot_ver2.Service
                     Image img = Image.FromFile(fileName[i]);
                     g.DrawImage(img, (i % root) * width, (i / root) * height);
                     img.Dispose();
+                    count();
                 }
 
-                bitmap.Save(Path.Combine(path, addressFileName + " 병합사진.jpg"), ImageFormat.Jpeg);
+                bitmap.Save(Path.Combine(path, place + " 병합사진.jpg"), ImageFormat.Jpeg);
 
                 fileName.Clear();
             }
