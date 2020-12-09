@@ -1,5 +1,4 @@
-﻿using MapShot_ver2.DAO;
-using MapShot_ver2.Models;
+﻿using MapShot_ver2.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -19,10 +18,13 @@ namespace MapShot_ver2.Service
         public event CompleteEvent complete;
 
         private Dictionary<int, string> fileName = new Dictionary<int, string>();
-        private const int width = 1024;
-        private const int height = 942;
+        private const int width = 1024;   // 1024 1024
+        private int height = 942;   // 1024 922 942
         private decimal lngMoveToRight = 0.011m;
         private decimal latMoveToBottom = 0.008m;
+        private decimal prefixLocation = 37.7623m; // 이 지역을 기준으로 보정
+        private decimal prefixCoor = 0.091185m; // 아래지역으로 내려갈수록 뭔가 이미지 오차가 생긴다. 보정값
+
         private Option option;
 
         public CaptureService(Option option)
@@ -44,6 +46,9 @@ namespace MapShot_ver2.Service
                 decimal firstLng = decimal.Parse(locale[1].Substring(0, 8));
                 decimal firstLat = decimal.Parse(locale[2].Substring(0, 7));
 
+                // height 보정하기
+                height -= (int)Math.Round((Math.Abs(firstLat - prefixLocation) / prefixCoor));
+
                 int blockNum = (int)Math.Pow((option.zoomLevelIndex  + 1) * 2 + 1, 2);
                 int rotation = (int)Math.Sqrt(blockNum);
 
@@ -62,7 +67,7 @@ namespace MapShot_ver2.Service
                 Parallel.ForEach(coors, i => GetImageFromUrl(i, saveDirectory, place));
 
                 MakeOneShot(blockNum, saveDirectory, place);
-
+                height = 942;
                 complete();
             }
 
@@ -117,7 +122,7 @@ namespace MapShot_ver2.Service
             string key = "개발자 키";
             string baseMap = Enum.Parse(typeof(MapTypeEnum), option.mapTypeIndex.ToString()).ToString();
             string center = coor.lng + "," + coor.lat;
-            string crs = "epsg:4326";
+            string crs = "EPSG:4326";
             string size = "1024,1024";
             string form = "jpeg";
             string zoom = (option.qualityIndex + 17).ToString();
@@ -163,12 +168,14 @@ namespace MapShot_ver2.Service
                 using (WebResponse response = request.GetResponse())
                 using(Stream data = response.GetResponseStream())
                 using (Bitmap bitmap = new Bitmap(data))
-                using(Bitmap clone = bitmap.Clone(new Rectangle(0, 0, width, height), PixelFormat.DontCare))
+                using (Bitmap clone = bitmap.Clone(new Rectangle(0, 0, width, height), PixelFormat.DontCare))
                 {
                     clone.Save(savePath, ImageFormat.Jpeg);
                     fileName.Add(coor.index, savePath);
                     count();
                 }
+
+  
             }
 
             catch (Exception ex)
